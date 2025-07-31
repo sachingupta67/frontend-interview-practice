@@ -1,4 +1,4 @@
-# Hosting
+# Hoisting
  - moving all function and variable declaration on the top of their scope before running the code
  - function and var declaration are hoisted
  - let or const are hoisted too - but stayed in Temporal Dead Zone
