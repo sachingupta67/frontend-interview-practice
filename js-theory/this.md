@@ -159,3 +159,158 @@ bound();           // Charlie
 5. **Manual binding** → Use `.call()`, `.apply()`, `.bind()` to control `this`.
 
 ```
+
+
+Here’s a Markdown version of your questions with answers hidden using a **toggle-style collapsible section**, perfect for use in a GitHub README or learning notes:
+
+---
+
+````md
+# 🔍 JavaScript `this` & Execution Context — Real Interview Questions
+
+---
+
+## ✅ Question 1 (Asked in Amazon)
+
+```js
+var a = 10;
+
+x();
+y();
+z(); // ReferenceError
+
+function x() {
+  var a = 20;
+  console.log(this.a);
+}
+function y() {
+  console.log(this.a);
+}
+const z = () => {
+  console.log(this.a);
+}
+````
+
+<details>
+<summary>🧠 Answer</summary>
+
+* `x()` → logs `10` → `this` is global → `this.a = 10`
+* `y()` → same → `10`
+* `z()` → ReferenceError → TDZ for `z`
+
+</details>
+
+---
+
+## ✅ Question 2
+
+```js
+let a = 10;
+
+x();
+y();
+z(); // ReferenceError
+
+function x() {
+  console.log(this.a);
+}
+function y() {
+  console.log(this.a);
+}
+const z = () => {
+  console.log(this.a);
+}
+```
+
+<details>
+<summary>🧠 Answer</summary>
+
+* `x()` → `undefined` (in strict mode, `this` is `undefined`; in loose, `window.a = 10`)
+* `y()` → same
+* `z()` → ReferenceError if `z` is called before it's defined (`const` in TDZ)
+
+</details>
+
+---
+
+## ✅ Question 3
+
+```js
+const myObject = {
+  name: "Test",
+  getFunctionName: function () {
+    console.log(this.name);
+  },
+  getArrowFunctionName: () => {
+    console.log(this.name);
+  },
+  updateArrowFunctionScope: function () {
+    const innerArrowFunction = () => {
+      console.log(this.name);
+    };
+    innerArrowFunction();
+  },
+};
+
+myObject.getFunctionName();
+myObject.getArrowFunctionName();
+myObject.updateArrowFunctionScope();
+```
+
+<details>
+<summary>🧠 Answer</summary>
+
+* `getFunctionName()` → `"Test"` (regular function uses `this` as `myObject`)
+* `getArrowFunctionName()` → `undefined` (arrow function uses outer `this`, which is global)
+* `updateArrowFunctionScope()` → `"Test"` (arrow inside regular function captures `this` from outer)
+
+</details>
+
+---
+
+## ✅ Question 4
+
+```js
+var doc = "Soni's frontend doc";
+const obj = {
+    doc:'soni',
+    printName: function(){
+        return this.doc;
+    },
+    printNameArrow: () => {
+        return this.doc;
+    },
+    IIFE: (function(){
+        return this.doc;
+    })(),
+    IIFEArrow: (() => {
+        return this.doc;
+    })()
+};
+
+console.log(obj.printName());
+console.log(obj.printNameArrow());
+console.log(obj.IIFE);
+console.log(obj.IIFEArrow);
+```
+
+<details>
+<summary>🧠 Answer</summary>
+
+| Function           | Output                  | Why?                                          |
+| ------------------ | ----------------------- | --------------------------------------------- |
+| `printName()`      | `'soni'`                | Regular method → `this = obj`                 |
+| `printNameArrow()` | `"Soni's frontend doc"` | Arrow → `this = global`, `doc` from `var doc` |
+| `IIFE`             | `"Soni's frontend doc"` | Regular IIFE → global `this`                  |
+| `IIFEArrow`        | `"Soni's frontend doc"` | Arrow IIFE → lexical `this`, still global     |
+
+</details>
+
+---
+
+✅ **Pro Tip:** Always pay attention to how functions are defined and invoked. Arrow functions do **not** bind their own `this`!
+
+Would you like a downloadable `.md` file or this exported as a GitHub Gist?
+
+```
+```
