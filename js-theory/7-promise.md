@@ -321,7 +321,358 @@ async function fetchData() {
 }
 ```
 
+
+## 🔍 JavaScript Async/Await & Promise Interview Questions
+
+*(Answers are hidden in collapsible-style format for better practice)*
+
 ---
 
+### ✅ **Question 1**
+
+```js
+async function foo() {
+  console.log(1);
+  await Promise.resolve();
+  console.log(2);
+}
+
+foo();
+console.log(3);
 ```
+
+<details>
+<summary>🔽 Show Output & Explanation</summary>
+
+🖨️ **Output:**
+
+```
+1  
+3  
+2
+```
+
+🧠 **Explanation:**
+
+* `1` prints synchronously.
+* `await Promise.resolve()` pauses `foo()` and schedules the rest in **microtask**.
+* So `console.log(3)` runs next (synchronous).
+* Then `console.log(2)` runs after `await`.
+
+</details>
+
+---
+
+### ✅ **Question 2**
+
+```js
+Promise.all([Promise.resolve(1), Promise.resolve(2), Promise.reject("Error")])
+  .then((values) => console.log("Resolved:", values))
+  .catch((err) => console.log("Caught:", err));
+```
+
+<details>
+<summary>🔽 Show Output & Explanation</summary>
+
+🖨️ **Output:**
+
+```
+Caught: Error
+```
+
+🧠 **Explanation:**
+
+* `Promise.all` fails **immediately** if any promise rejects.
+* So `.catch` is triggered with `"Error"`.
+
+</details>
+
+---
+
+### ✅ **Question 3**
+
+```js
+Promise.all([Promise.resolve(1), undefined, null])
+  .then((values) => console.log("Resolved:", values))
+  .catch((err) => console.log("Caught:", err));
+```
+
+<details>
+<summary>🔽 Show Output & Explanation</summary>
+
+🖨️ **Output:**
+
+```
+Resolved: [1, undefined, null]
+```
+
+🧠 **Explanation:**
+
+* `undefined` and `null` are not promises → they are wrapped in `Promise.resolve(...)` by default.
+* All succeed → returns array as-is.
+
+</details>
+
+---
+
+### ✅ **Question 4**
+
+```js
+console.log("Start");
+new Promise((resolve, rej) => {
+    console.log("Promise1");
+    resolve("resolved");
+    console.log("Promise2");
+}).then(data => console.log(data));
+console.log("end");
+```
+
+<details>
+<summary>🔽 Show Output & Explanation</summary>
+
+🖨️ **Output:**
+
+```
+Start  
+Promise1  
+Promise2  
+end  
+resolved
+```
+
+🧠 **Explanation:**
+
+* All code inside `new Promise(...)` runs **immediately** (synchronously).
+* `.then()` runs later in **microtask queue**.
+
+</details>
+
+---
+
+### ✅ **Question 5**
+
+```js
+console.log('Start');
+setTimeout(() => {
+  console.log('Timeout');
+}, 0);
+Promise.resolve().then(() => {
+  console.log('Promise');
+});
+console.log('End');
+```
+
+<details>
+<summary>🔽 Show Output & Explanation</summary>
+
+🖨️ **Output:**
+
+```
+Start  
+End  
+Promise  
+Timeout
+```
+
+🧠 **Explanation:**
+
+* `setTimeout` → **macrotask**
+* `Promise.then` → **microtask**
+* Microtasks run **before** macrotasks after call stack is empty.
+
+</details>
+
+---
+
+### ✅ **Question 6**
+
+```js
+console.log('Start');
+
+setTimeout(() => {
+  console.log('Timeout 1');
+  Promise.resolve().then(() => {
+    console.log('Promise 1');
+  });
+  setTimeout(() => {
+    console.log('Timeout 2');
+  }, 0);
+}, 0);
+
+Promise.resolve().then(() => {
+  console.log('Promise 2');
+});
+
+console.log('End');
+```
+
+<details>
+<summary>🔽 Show Output & Explanation</summary>
+
+🖨️ **Output:**
+
+```
+Start  
+End  
+Promise 2  
+Timeout 1  
+Promise 1  
+Timeout 2
+```
+
+🧠 **Explanation Order:**
+
+1. Synchronous: Start, End
+2. Microtask: Promise 2
+3. Macrotask: Timeout 1
+4. Nested microtask: Promise 1
+5. Next macrotask: Timeout 2
+
+</details>
+
+---
+
+### ✅ **Question 7**
+
+```js
+Promise.resolve(1)
+  .then((x) => x + 1)
+  .then((x) => {
+    throw new Error("An error occurred!");
+  })
+  .catch((err) => {
+    console.log(err.message);
+    return 5;
+  })
+  .then((x) => console.log(x));
+```
+
+<details>
+<summary>🔽 Show Output & Explanation</summary>
+
+🖨️ **Output:**
+
+```
+An error occurred!  
+5
+```
+
+🧠 **Explanation:**
+
+* Error is thrown in `.then` → caught in `.catch`
+* `.catch()` returns `5` → passed to next `.then`
+
+</details>
+
+---
+
+### ✅ **Question 8**
+
+```js
+const promise = new Promise((resolve, reject) => {
+    resolve("First");
+    resolve("Second");
+    reject("Third");
+});
+
+promise
+  .then((res) => console.log(res))
+  .catch((err) => console.log(err));
+```
+
+<details>
+<summary>🔽 Show Output & Explanation</summary>
+
+🖨️ **Output:**
+
+```
+First
+```
+
+🧠 **Explanation:**
+
+* Promise can only resolve/reject **once**.
+* First `resolve("First")` is used.
+* Remaining `resolve` and `reject` calls are ignored.
+
+</details>
+
+---
+
+### ✅ **Question 9**
+
+```js
+console.log('Start');
+
+async function foo() {
+  console.log('Foo Start');
+  await new Promise(resolve => setTimeout(resolve, 0));
+  console.log('Foo End');
+}
+
+foo().then(() => {
+  console.log('After Foo');
+});
+
+console.log('End');
+```
+
+<details>
+<summary>🔽 Show Output & Explanation</summary>
+
+🖨️ **Output:**
+
+```
+Start  
+Foo Start  
+End  
+Foo End  
+After Foo
+```
+
+🧠 **Explanation:**
+
+* `console.log('Foo Start')` runs immediately
+* `await` pauses, and rest of `foo` goes into microtask after `setTimeout` (macrotask)
+* `.then()` runs **after** the awaited code finishes
+
+</details>
+
+---
+
+### ✅ **Question 10**
+
+```js
+Promise.reject("Error")
+  .catch((err) => {
+    console.log("Caught:", err);
+    return "Recovered";
+  })
+  .finally(() => {
+    console.log("Finally 2");
+  })
+  .then((value) => {
+    console.log("Then:", value);
+  });
+```
+
+<details>
+<summary>🔽 Show Output & Explanation</summary>
+
+🖨️ **Output:**
+
+```
+Caught: Error  
+Finally 2  
+Then: Recovered
+```
+
+🧠 **Explanation:**
+
+* `.catch` handles the rejection and returns `"Recovered"`
+* `.finally` runs **no matter what**
+* `.then` receives the result returned from `.catch`
+
+</details>
+
 
