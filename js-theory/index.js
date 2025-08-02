@@ -1,110 +1,96 @@
-// Question 1
+// const obj = Object.freeze({
+//   a: 1,
+//   b: { c: 2 },
+// });
 
-// async function foo() {
-//   console.log(1);
-//   await Promise.resolve();
-//   console.log(2);
+// obj.b.c = 3; 
+// obj.d = 4;
+
+// console.log(obj);
+
+
+
+// const userDetails = {
+//   firstName: "John",
+//   lastName: "Doe",
+//   age: 25,
+//   address: { city: "Bangalore", country: "USA" }
 // }
 
-// foo();
-// console.log(3);
+// let cloneUserDetails = { ...userDetails };
 
-// Question 2
+// //Updating original object
+// userDetails.age = 18;
+// userDetails.address.city = "chennai";
 
-// Promise.all([Promise.resolve(1), Promise.resolve(2), Promise.reject("Error")])
-//   .then((values) => console.log("Resolved:", values))
-//   .catch((err) => console.log("Caught:", err));
-
-
-// Promise.all([Promise.resolve(1), undefined, null])
-//   .then((values) => console.log("Resolved:", values))
-//   .catch((err) => console.log("Caught:", err));
+// console.log(cloneUserDetails.age); 
+// console.log(cloneUserDetails.address.city);
 
 
-// console.log("Start")
-// new Promise((resolve, rej) => {
-//     console.log("Promise1")
-//     resolve("resolved")
-//     console.log("Promise2")
-// }).then(data => console.log(data))
-// console.log("end")
 
-
-// console.log('Start');
-// setTimeout(() => {
-//   console.log('Timeout');
-// }, 0);
-// Promise.resolve().then(() => {
-//   console.log('Promise');
-// });
-// console.log('End');
-
-
-// console.log('Start');
-
-// setTimeout(() => {
-//   console.log('Timeout 1');
-//   Promise.resolve().then(() => {
-//     console.log('Promise 1');
-//   });
-//   setTimeout(() => {
-//     console.log('Timeout 2');
-//   }, 0);
-// }, 0);
-
-// Promise.resolve().then(() => {
-//   console.log('Promise 2');
-// });
-
-// console.log('End');
-
-
-// Promise.resolve(1)
-//     .then((x) => x + 1)
-//     .then((x) => {
-//         throw new Error("An error occurred!");
-//     })
-//     .catch((err) => {
-//         console.log(err.message);
-//         return 5;
-//     })
-//     .then((x) => console.log(x));
-
-
-// const promise = new Promise((resolve, reject) => {
-//     resolve("First");
-//     resolve("Second");
-//     reject("Third");
-// });
-
-// promise
-//     .then((res) => console.log(res))
-//     .catch((err) => console.log(err));
-
-
-// console.log('Start');
-
-// async function foo() {
-//   console.log('Foo Start');
-//   await new Promise(resolve => setTimeout(resolve, 0));
-//   console.log('Foo End');
+// function Animal() {
+//   this.species = "Animal";
 // }
 
-// foo().then(() => {
-//   console.log('After Foo');
-// });
+// Animal.prototype.getSpecies = function() {
+//   return this.species;
+// };
 
-// console.log('End')
+// function Dog() {
+//   this.species = "Dog";
+// }
+
+// Dog.prototype = new Animal();
+
+// const dog = new Dog();
+// console.log(dog.getSpecies());
 
 
-// Promise.reject("Error")
-//   .catch((err) => {
-//     console.log("Caught:", err);
-//     return "Recovered";
-//   })
-//   .finally(() => {
-//     console.log("Finally 2");
-//   })
-//   .then((value) => {
-//     console.log("Then:", value);
-//   });
+// function A() {}
+// function B() {}
+
+// A.prototype = new B();
+
+// const a = new A();
+// console.log(a instanceof A);
+// console.log(a instanceof B);
+
+
+// function Person(name) {
+//     this.name = name;
+//     return { name: "John" };
+// }
+
+// const person = new Person("Alice");
+// console.log(person.name);
+
+
+
+
+// const obj = {
+//   a: 1
+// };
+
+// console.log(obj.hasOwnProperty('a'));
+// console.log(obj.hasOwnProperty('b'));
+
+// const obj1 = {
+//   hasOwnProperty: function() {
+//     return 'return!';
+//   },
+//   a: 1
+// };
+
+// console.log(obj1.hasOwnProperty('a'));
+
+
+// const obj1 = { a: 1 };
+// const obj2 = Object.create(obj1);
+
+// console.log(obj2.__proto__ === obj1);
+
+
+// const obj = { a: 1, b: 2 };
+// delete obj.a;
+// console.log(obj.a); 
+// console.log('a' in obj);
