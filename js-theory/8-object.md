@@ -749,3 +749,100 @@ false
 
 
 ```
+
+
+## 🔍 Difference Table: `call` vs `apply` vs `bind`
+
+| Feature              | `call`                          | `apply`                           | `bind`                                  |
+| -------------------- | ------------------------------- | --------------------------------- | --------------------------------------- |
+| Executes Immediately | ✅ Yes                           | ✅ Yes                             | ❌ No (returns new function)             |
+| Arguments Format     | Individual: `fn(arg1, arg2)`    | Array: `fn([arg1, arg2])`         | Individual: `fn(arg1)` (can be partial) |
+| `this` Context Set   | ✅ Yes                           | ✅ Yes                             | ✅ Yes (permanently)                     |
+| Returns              | Return value of function        | Return value of function          | New bound function                      |
+| Use Case             | Quick invoke with custom `this` | Same as `call`, but args in array | Store later use with fixed `this`       |
+
+---
+
+## ✅ Examples
+
+### 🔹 `call` – invoke with custom `this`, args individually
+
+```js
+function greet(greeting) {
+  console.log(`${greeting}, ${this.name}`);
+}
+greet.call({ name: "Alice" }, "Hello");
+// Output: Hello, Alice
+```
+
+---
+
+### 🔹 `apply` – same as `call`, but args in an array
+
+```js
+greet.apply({ name: "Bob" }, ["Hi"]);
+// Output: Hi, Bob
+```
+
+---
+
+### 🔹 `bind` – doesn't call immediately, returns new function
+
+```js
+const boundGreet = greet.bind({ name: "Charlie" }, "Hey");
+boundGreet();
+// Output: Hey, Charlie
+```
+
+
+### ✅ `WeakMap` vs `WeakSet` – Simple Comparison Table
+
+| Feature                 | **WeakMap**                                                              | **WeakSet**                                                |
+| ----------------------- | ------------------------------------------------------------------------ | ---------------------------------------------------------- |
+| 🧱 **What it stores**   | Pairs → Object (as key) and any value                                    | Only objects (no key-value, just values)                   |
+| 🎯 **Purpose**          | Attach **secret info** to objects                                        | Keep **track** of which objects you’ve seen                |
+| 🧍 **Only objects?**    | ✅ Yes, only objects as keys                                              | ✅ Yes, only objects                                        |
+| 🧹 **Auto cleanup?**    | ✅ Yes, when object is removed from code, its entry is auto removed       | ✅ Yes, when object is removed from code, it's auto removed |
+| 🔁 **Can you loop it?** | ❌ No – You can’t see what’s inside                                       | ❌ No – You can’t loop over it                              |
+| 🧰 **Real-world use**   | Store **private user data** safely (like passwords)                      | Track which **DOM elements** have been visited             |
+| 🧪 **Simple Example**   | `weakMap.set(user, "loggedIn")`<br>`user = null` → entry is auto deleted | `weakSet.add(obj)`<br>`obj = null` → it will be forgotten  |
+
+---
+
+### 🧩 Code Examples in Simple Words
+
+#### 🔹 `WeakMap` – Like a **secret label** on an object:
+
+```js
+const weakMap = new WeakMap();
+
+let user = { name: "Sachin" };
+weakMap.set(user, "Logged In"); // Add secret info
+
+user = null; // Object gone
+// WeakMap will automatically forget the secret
+```
+
+#### 🔹 `WeakSet` – Like a **guest list**:
+
+```js
+const weakSet = new WeakSet();
+
+let person = { name: "Rahul" };
+weakSet.add(person); // Add to guest list
+
+person = null; // Person leaves
+// WeakSet will automatically remove them
+```
+
+---
+
+### 🧠 Easy Analogy
+
+| Concept     | Analogy Example                                                                                                               |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| **WeakMap** | A **locker** where key is a person (object), and value is their secret. When the person leaves, the locker is auto-emptied.   |
+| **WeakSet** | A **party guest list** where you add people (objects). If they leave and you forget them, they’re auto-removed from the list. |
+
+
+- rest vs spread
