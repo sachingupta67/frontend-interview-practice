@@ -750,6 +750,139 @@ false
 
 ```
 
+Here is your code transformed into a clean **Markdown (.md) document** format with toggle-able answers using HTML `<details>` tags (commonly supported on GitHub and markdown viewers):
+
+---
+
+````md
+# 🔍 JavaScript Deep Dive — `WeakMap`, `call`, `apply`, `bind`
+
+---
+
+## 1️⃣ WeakMap Garbage Collection Example
+
+```js
+let obj = { name: 'John' };
+let weakMap = new WeakMap();
+weakMap.set(obj, 'Person');
+
+console.log(weakMap.has(obj)); 
+
+obj = null; 
+
+setTimeout(() => {
+  console.log(weakMap.has(obj));  
+}, 1000);
+````
+
+<details>
+<summary>💡 Explanation + Output</summary>
+
+* `WeakMap` only holds **weak references** to keys (objects).
+* When `obj = null`, the object is eligible for **garbage collection**.
+* The second `weakMap.has(obj)` will be `false` **eventually**, but **not guaranteed immediately** (depends on when GC runs).
+
+**Possible Output:**
+
+```
+true
+false
+```
+
+But due to garbage collector timing, the second may **still be `true`** if GC hasn't run yet.
+
+</details>
+
+---
+
+## 2️⃣ `call`, `apply`, and `bind` Example
+
+```js
+const obj = { value: 10 };
+
+function calculate(add, multiply) {
+  return (this.value + add) * multiply;
+}
+
+const newObj = { value: 20 };
+
+console.log(calculate.call(obj, 5, 2));        // ?
+console.log(calculate.apply(newObj, [3, 4]));  // ?
+
+const boundCalc = calculate.bind(obj, 2); 
+console.log(boundCalc(3));                    // ?
+```
+
+<details>
+<summary>💡 Explanation + Output</summary>
+
+* `call` invokes `calculate` with `this = obj`, arguments individually:
+
+  ```js
+  (10 + 5) * 2 = 30
+  ```
+* `apply` invokes `calculate` with `this = newObj`, arguments as an array:
+
+  ```js
+  (20 + 3) * 4 = 92
+  ```
+* `bind` returns a new function with `this = obj`, `add = 2` already set:
+
+  ```js
+  (10 + 2) * 3 = 36
+  ```
+
+**Output:**
+
+```
+30
+92
+36
+```
+
+</details>
+
+---
+
+## 3️⃣ Multiple `.bind()` Calls
+
+```js
+const obj = {
+  name: "John",
+  getName: function () {
+    return this.name;
+  },
+};
+
+const bound1 = obj.getName.bind({ name: "Frank" });
+const bound2 = bound1.bind({ name: "Grace" });
+
+console.log(bound1());  // ?
+console.log(bound2());  // ?
+```
+
+<details>
+<summary>💡 Explanation + Output</summary>
+
+* First `.bind({ name: "Frank" })` creates a new function locked to "Frank".
+* Second `.bind(...)` does **nothing** — once bound, you can't re-bind.
+* So both `bound1()` and `bound2()` return `"Frank"`.
+
+**Output:**
+
+```
+Frank
+Frank
+```
+
+</details>
+
+---
+
+
+```
+
+
 
 ## 🔍 Difference Table: `call` vs `apply` vs `bind`
 
