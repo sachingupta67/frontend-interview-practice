@@ -1,36 +1,74 @@
-# Event Loop
-- its a mechanism that allow JS(single threaded) to handle multiple Tasks at once without blocking browser
-- eg: fetching data , handling user clicks , running animations without blocking browser
 
 
-# Key Concepts 
-- Call Stack  
-  Executes synchronous(immediate) code , LIFO - Last in First Out
-  Runs current synchronous code
-- Web APIs (not a part of JS)
-  Functions like setTimeout, DOM methods, fetch, console.log, localStorage, etc., live in the browser, not JS engine. Accessed via window 
-  eg: Handles async like setTimeout, fetch
-- Callback Queue / Task Queue  (Low Priority)
-  Hold task from Web APis to be run after stack is empty
-  eg: Queues setTimeout, fetch results
-- Micro task Queue (High Priority)
-  Holds Promises and other micro tasks, Always runs before callback que
-  eg: Promise.then, queueMicrotask
-- Event Loop
-  Keep Checking "Is call stack empty" , if Yes then push next task from microtask -> callbackque
-- Starvation
-  When microtasks flood the event loop, regular tasks may never execute.
+# 🔁 Event Loop
 
+* It's a mechanism that allows JavaScript (which is single-threaded) to handle multiple tasks at once without blocking the browser.
+* Example: Fetching data, handling user clicks, running animations — all without freezing the browser.
 
-# Flow
-1. JS code runs GEC Created
-2. Call Stack
-3. Check Code (Sync / Async)
-   Sync - Run First
-   Async - Go to Web APIS
-         - Web APis Completed
-           - Sends Callbacks --> Micro Task / Macro Task
-           - Will check Is Call Stacks Empty ?
-             - if Yes  (Event Loop Come into Picture)
-               then Micro Tasks Queue Runs first then Macro Task Queue
-               - Call back goes to call stack and run
+---
+
+## 🔑 Key Concepts
+
+### ✅ Call Stack
+
+* Executes synchronous (immediate) code.
+* Works in **LIFO** (Last In First Out) order.
+* Runs the current synchronous code.
+
+### ✅ Web APIs *(Not part of JavaScript)*
+
+* Functions like `setTimeout`, `DOM methods`, `fetch`, `console.log`, `localStorage`, etc. live in the browser (or Node), not in the JS engine.
+* Accessed via the `window` object in browsers.
+* Used to handle async operations like `setTimeout`, `fetch`, etc.
+
+### ✅ Callback Queue / Task Queue (Low Priority)
+
+* Holds tasks from Web APIs to be run **after the call stack is empty**.
+* Example: Queues for `setTimeout`, `fetch` results, `event listeners`.
+
+### ✅ Microtask Queue (High Priority)
+
+* Holds Promises and other microtasks.
+* **Always runs before the callback queue**.
+* Examples: `Promise.then`, `queueMicrotask`.
+
+### ✅ Event Loop
+
+* Keeps checking: **Is the call stack empty?**
+
+  * If **yes**, then:
+
+    * Runs **all microtasks first**
+    * Then runs one task from the **callback queue**
+
+### ⚠️ Starvation
+
+* Happens when microtasks keep queuing more microtasks and flood the event loop.
+* This causes regular (macro) tasks like `setTimeout` to **never execute**.
+
+---
+
+## 🔄 Flow
+
+1. JS code starts running → Global Execution Context (GEC) is created
+2. Call Stack starts execution
+3. JS checks each line:
+
+   * If Sync → Runs immediately
+   * If Async → Sent to Web APIs
+4. Once Web APIs complete:
+
+   * They send their callbacks to either:
+
+     * **Microtask queue** (e.g., Promises)
+     * **Macrotask queue / Callback queue** (e.g., setTimeout)
+5. Event Loop checks:
+
+   * Is Call Stack empty?
+
+     * If Yes:
+
+       * Runs **Microtasks first**
+       * Then **Macrotasks (Callback queue)**
+       * Callbacks go to call stack → then run
+
